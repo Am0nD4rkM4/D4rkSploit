@@ -1,6 +1,6 @@
 # consola.py — la consola del framework, como msfconsole
-# Comandos: help, show modules, use <modulo>, show options,
-# set <opcion> <valor>, run, back, exit
+# Comandos en español: ayuda, mostrar modulos, usar <modulo>,
+# mostrar opciones, poner <opcion> <valor>, correr, volver, salir
 # Solo para tu propia máquina o un objetivo con permiso.
 #
 # ¿Qué es esto?
@@ -24,14 +24,14 @@ MODULOS = {
 def mostrar_ayuda():
     # Esta función solo imprime los comandos, no devuelve nada.
     print("\nComandos:")
-    print("  help              muestra esta ayuda")
-    print("  show modules      lista los módulos disponibles")
-    print("  use <modulo>      elige un módulo (ej: use vuln/http_headers)")
-    print("  show options      muestra las opciones del módulo elegido")
-    print("  set <opcion> <valor>   cambia una opción (ej: set URL https://example.com)")
-    print("  run               corre el módulo elegido")
-    print("  back              vuelve a no tener módulo elegido")
-    print("  exit              salir")
+    print("  ayuda             muestra esta ayuda (en inglés: help)")
+    print("  mostrar modulos   lista los módulos disponibles (show modules)")
+    print("  usar <modulo>     elige un módulo (ej: usar vuln/http_headers)")
+    print("  mostrar opciones  muestra las opciones del módulo elegido")
+    print("  poner <opcion> <valor>  cambia una opción (ej: poner URL https://example.com)")
+    print("  correr            corre el módulo elegido (run)")
+    print("  volver            vuelve a no tener módulo elegido (back)")
+    print("  salir             salir (exit)")
 
 
 def main():
@@ -43,9 +43,9 @@ def main():
     opciones = {}
     print("D4rkSploit — framework personal de pruebas de penetración")
     print("Solo para tu propia máquina o un objetivo con permiso.")
-    print("Escribe 'help' para ver los comandos.")
+    print("Escribe 'ayuda' para ver los comandos.")
     # while True es un bucle infinito: la consola no se cierra sola,
-    # solo se sale con el comando exit, que hace break.
+    # solo se sale con el comando salir, que hace break.
     while True:
         # El prompt cambia según tengas un módulo elegido o no,
         # igual que en msfconsole.
@@ -59,77 +59,100 @@ def main():
             prompt = f"darksploit({modulo.NOMBRE})> "
         # input() lee lo que escribes, .strip() le quita los espacios
         # de los lados, por si escribiste un espacio de más.
-        texto = input(prompt).strip()
+        # .lower() lo pasa todo a minúsculas, para que "Ayuda" y
+        # "ayuda" sean lo mismo.
+        texto = input(prompt).strip().lower()
         # Si escribiste solo Enter (texto vacío), no hacemos nada
         # y volvemos a mostrar el prompt.
         if texto == "":
             continue
         # texto.split() parte lo que escribiste en palabras.
-        # "use vuln/http_headers".split() da ["use", "vuln/http_headers"].
+        # "usar vuln/http_headers".split() da ["usar", "vuln/http_headers"].
         # partes[0] es el comando, partes[1] es el argumento.
         partes = texto.split()
         comando = partes[0]
 
-        if comando == "exit":
+        # Cada comando tiene su nombre en español y, entre paréntesis,
+        # su nombre en inglés de Metasploit, por si lo ves en otro lado.
+        # "in" con una tupla busca si el comando es uno de los dos:
+        # comando in ("salir", "exit") es True si es "salir" o "exit".
+        if comando in ("salir", "exit"):
             print("Hasta luego, Luis.")
             # break rompe el while True y se acaba el programa.
             break
-        elif comando == "help":
+        elif comando in ("ayuda", "help"):
             mostrar_ayuda()
-        # show modules: len(partes) == 2 significa que escribiste
-        # exactamente dos palabras, "show" y "modules".
-        elif comando == "show" and len(partes) == 2 and partes[1] == "modules":
+        # mostrar modulos: len(partes) == 2 significa que escribiste
+        # exactamente dos palabras, "mostrar" y "modulos".
+        elif comando == "mostrar" and len(partes) == 2 and partes[1] == "modulos":
             print("\nMódulos disponibles:")
             # for nombre, mod in MODULOS.items() recorre el diccionario
             # por parejas llave-valor: nombre es la llave, mod es el valor.
             for nombre, mod in MODULOS.items():
                 print(f"  {nombre}  —  {mod.DESCRIPCION}")
-        elif comando == "show" and len(partes) == 2 and partes[1] == "options":
+        elif comando == "mostrar" and len(partes) == 2 and partes[1] == "opciones":
             if modulo is None:
-                print("Primero elige un módulo con 'use <modulo>'.")
+                print("Primero elige un módulo con 'usar <modulo>'.")
             else:
                 print("\nOpciones:")
                 # Recorremos las opciones por parejas llave-valor.
                 for clave, valor in opciones.items():
                     print(f"  {clave} = {valor}")
-        elif comando == "use" and len(partes) == 2:
+        # show modules y show options también funcionan, por si los
+        # escribes en inglés como en Metasploit.
+        elif comando == "show" and len(partes) == 2 and partes[1] == "modules":
+            print("\nMódulos disponibles:")
+            for nombre, mod in MODULOS.items():
+                print(f"  {nombre}  —  {mod.DESCRIPCION}")
+        elif comando == "show" and len(partes) == 2 and partes[1] == "options":
+            if modulo is None:
+                print("Primero elige un módulo con 'usar <modulo>'.")
+            else:
+                print("\nOpciones:")
+                for clave, valor in opciones.items():
+                    print(f"  {clave} = {valor}")
+        elif comando in ("usar", "use") and len(partes) == 2:
             nombre = partes[1]
             # in busca la llave en el diccionario: si el módulo existe.
             if nombre in MODULOS:
                 modulo = MODULOS[nombre]
                 # dict(modulo.OPCIONES) hace una COPIA de las opciones
-                # del módulo. Si no copiáramos, 'set' cambiaría las
+                # del módulo. Si no copiáramos, 'poner' cambiaría las
                 # opciones del módulo original para siempre, y eso
                 # no queremos: cada vez que eliges el módulo, sus
                 # opciones deben volver a su valor por defecto.
                 opciones = dict(modulo.OPCIONES)
                 print(f"[*] Módulo elegido: {nombre}")
             else:
-                print(f"Ese módulo no existe. Prueba 'show modules'.")
-        # set necesita exactamente tres palabras: "set", la opción
-        # y el valor, por ejemplo "set URL https://example.com".
-        elif comando == "set" and len(partes) == 3:
+                print(f"Ese módulo no existe. Prueba 'mostrar modulos'.")
+        # poner necesita exactamente tres palabras: "poner", la opción
+        # y el valor, por ejemplo "poner URL https://example.com".
+        # Ojo: como todo el texto se pasa a minúsculas con .lower(),
+        # la opción y el valor también quedan en minúsculas. Por eso
+        # las opciones del módulo van en mayúsculas en el código,
+        # pero aquí las comparamos con .upper(): "url".upper() es "URL".
+        elif comando in ("poner", "set") and len(partes) == 3:
             if modulo is None:
-                print("Primero elige un módulo con 'use <modulo>'.")
-            elif partes[1] in opciones:
-                opciones[partes[1]] = partes[2]
-                print(f"{partes[1]} = {partes[2]}")
+                print("Primero elige un módulo con 'usar <modulo>'.")
+            elif partes[1].upper() in opciones:
+                opciones[partes[1].upper()] = partes[2]
+                print(f"{partes[1].upper()} = {partes[2]}")
             else:
-                print(f"Esa opción no existe en este módulo. Prueba 'show options'.")
-        elif comando == "run":
+                print(f"Esa opción no existe en este módulo. Prueba 'mostrar opciones'.")
+        elif comando in ("correr", "run"):
             if modulo is None:
-                print("Primero elige un módulo con 'use <modulo>'.")
+                print("Primero elige un módulo con 'usar <modulo>'.")
             else:
                 # Aquí la consola le pasa las opciones al módulo
                 # y el módulo hace su trabajo.
                 modulo.run(opciones)
-        elif comando == "back":
-            # back olvida el módulo elegido y sus opciones.
+        elif comando in ("volver", "back"):
+            # volver olvida el módulo elegido y sus opciones.
             modulo = None
             opciones = {}
             print("[*] Sin módulo elegido.")
         else:
-            print("Comando no reconocido. Escribe 'help'.")
+            print("Comando no reconocido. Escribe 'ayuda'.")
 
 
 # Esta llamada, en la columna 0 y sin nada después, es la que

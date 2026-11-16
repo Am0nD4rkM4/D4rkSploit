@@ -3,8 +3,10 @@
 Framework personal de pruebas de penetración en Python, estilo Metasploit,
 para tu propia máquina o un objetivo con permiso.
 
-Consola tipo `msfconsole` con comandos `help`, `show modules`,
-`use <modulo>`, `show options`, `set <opcion> <valor>`, `run`, `back` y `exit`.
+Consola tipo `msfconsole`, con comandos en español
+(también funcionan en inglés, como en Metasploit):
+`ayuda`, `mostrar modulos`, `usar <modulo>`, `mostrar opciones`,
+`poner <opcion> <valor>`, `correr`, `volver` y `salir`.
 
 ## Módulos
 
@@ -18,11 +20,11 @@ python3 consola.py
 ```
 
 ```
-darksploit> show modules
-darksploit> use vuln/http_headers
-darksploit(vuln/http_headers)> show options
-darksploit(vuln/http_headers)> set URL https://example.com
-darksploit(vuln/http_headers)> run
+darksploit> mostrar modulos
+darksploit> usar vuln/http_headers
+darksploit(vuln/http_headers)> mostrar opciones
+darksploit(vuln/http_headers)> poner URL https://example.com
+darksploit(vuln/http_headers)> correr
 ```
 
 ## Licencia
