@@ -7,7 +7,7 @@
 # Es el esqueleto del framework: sin él, cada módulo sería un programa
 # distinto. La consola es la que los carga y los corre, igual que
 # msfconsole carga los módulos de Metasploit.
-from modulos import cabeceras
+from modulos import cabeceras, escaner_nmap
 
 # MODULOS es un diccionario.
 # La llave es el nombre del módulo, como "vuln/http_headers",
@@ -16,8 +16,11 @@ from modulos import cabeceras
 # buscas algo en un diccionario por su llave.
 # Cada módulo es un archivo en modulos/, con NOMBRE, DESCRIPCION,
 # OPCIONES y una función run(opciones).
+# Para agregar un módulo nuevo, se importa aquí y se agrega una
+# línea en este diccionario, como la de escaner_nmap.
 MODULOS = {
     cabeceras.NOMBRE: cabeceras,
+    escaner_nmap.NOMBRE: escaner_nmap,
 }
 
 
